@@ -16,12 +16,16 @@ const LoginController = async(request, response) => {
         const db_response = await client.send(command);
         
         const user = db_response.Items.find(
-        item => item.email === email && item.password === password
+            item => item.email === email && item.password === password
         );
-
-        const token = await generateToken(user);
-
-        response.status(200).json({token: token});
+        
+        if(user){
+            const token = await generateToken(user);
+            response.status(200).json({token: token});
+        }else{
+            response.status(404).json({message: "user not found"});
+        };
+    
 
     }catch(error){
         response.status(500).json({message: error.message});
