@@ -3,6 +3,11 @@ import { PutCommand } from "@aws-sdk/lib-dynamodb";
 
 const createUser = async(request, response) => {
 
+    if(request.token.id.role !== "admin"){
+        return response.status(401).json({message: "unauthorized"});
+    };
+
+
     const params = {
         TableName: process.env.B2P_TEACHERS_AUTH_DYNAMO_TABLE,
         Item:request.body
