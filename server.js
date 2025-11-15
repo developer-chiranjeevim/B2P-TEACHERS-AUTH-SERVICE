@@ -3,7 +3,10 @@ import cors from "cors";
 import dotenv from "dotenv";
 
 import LoginUserRouter from "./routes/LoginUserRouter.js";
-import HomeRouter from "./routes/HomeRouter.js"
+import HomeRouter from "./routes/HomeRouter.js";
+import CreateUserRouter from "./routes/CreateUserRouter.js";
+
+
 
 const app = express();
 
@@ -16,6 +19,7 @@ const PORT = process.env.PORT || 8080;
 
 app.use("/", HomeRouter);
 app.use('/apis', LoginUserRouter);
+app.use('/apis', CreateUserRouter);
 
 app.listen(PORT, (error) => {
     if(error){
