@@ -27,6 +27,34 @@ const fetchStudentsCount = async() => {
     };
 };
 
+const CheckEmailAlreadyExists = async(email) => {
+    
+    const params = {
+        TableName: process.env.B2P_TEACHERS_STUDENT_AUTH_TABLE
+    };
+
+    
+    
+    try{
+    const DBResponse = await client.send(new ScanCommand(params));
+    const exists = DBResponse.Items.filter((item) => {
+        return item.email["S"] === email
+
+    });
+    console.log(exists);
+    if(exists.length !== 0){
+        return true;
+    }else{
+        return false;
+    };
+
+    }catch(error){
+        console.log(error);
+        return -1;
+    };
+};
 
 
-export {fetchStudentsCount};
+
+
+export {fetchStudentsCount, CheckEmailAlreadyExists};

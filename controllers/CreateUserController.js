@@ -1,6 +1,6 @@
 import { client } from "../db/dbConfig.js";
 import { PutCommand } from "@aws-sdk/lib-dynamodb";
-import { fetchStudentsCount } from "../utils/FetchRecordsCount.js";
+import { fetchStudentsCount, CheckEmailAlreadyExists } from "../utils/FetchRecordsCount.js";
 
 
 const createUser = async(request, response) => {
@@ -27,8 +27,14 @@ const createUser = async(request, response) => {
 const createStudentUser = async(request, response) => {
 
     const docCount = await fetchStudentsCount();
+    const emailExists = await CheckEmailAlreadyExists(request.body.email);
+
     if(docCount === -1){
         return response.status(500).json({message: "Cannout Able to fetch existing student count inorder to generate ID"});
+    }
+
+    if(emailExists){
+        return response.status(409).json({message: "User With The Following Email Already Exists"});
     }
 
     request.body.student_id =  `STU${docCount + 1}`;

@@ -16,6 +16,7 @@ const FetchAllStudents = async(request, response) => {
             item.name["S"],
             item.student_id["S"]
         ]);
+        
 
         response.status(200).json({students: names});
 
