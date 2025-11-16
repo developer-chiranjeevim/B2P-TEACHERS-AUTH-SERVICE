@@ -1,5 +1,7 @@
 import { client } from "../db/dbConfig.js";
 import { PutCommand } from "@aws-sdk/lib-dynamodb";
+import { fetchStudentsCount } from "../utils/FetchRecordsCount.js";
+
 
 const createUser = async(request, response) => {
 
@@ -22,6 +24,31 @@ const createUser = async(request, response) => {
     };
 };
 
+const createStudentUser = async(request, response) => {
+
+    const docCount = await fetchStudentsCount();
+    if(docCount === -1){
+        return response.status(500).json({message: "Cannout Able to fetch existing student count inorder to generate ID"});
+    }
+
+    request.body.student_id =  `STU${docCount + 1}`;
+
+    const params = {
+        TableName: process.env.B2P_TEACHERS_STUDENT_AUTH_TABLE,
+        Item:request.body
+    };
+
+    try{
+
+        await client.send(new PutCommand(params));
+        response.status(200).json({message: "student user create successfully"});
+
+    }catch(error){
+        response.status(500).json({message: error.message});
+    };
+};
 
 
-export {createUser};
+
+
+export {createUser, createStudentUser};

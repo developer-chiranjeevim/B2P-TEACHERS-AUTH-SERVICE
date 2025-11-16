@@ -1,0 +1,32 @@
+import { ScanCommand } from "@aws-sdk/client-dynamodb";
+import { client } from "../db/dbConfig.js";
+
+const fetchStudentsCount = async() => {
+
+    try{
+        const cmd = new ScanCommand({
+            TableName: process.env.B2P_TEACHERS_STUDENT_AUTH_TABLE,
+            Select: "COUNT"
+        });
+
+        let total = 0;
+        let lastKey;
+
+        do{
+            const res = await client.send(cmd);
+            total += res.Count;
+            lastKey = res.LastEvaluatedKey;
+            cmd.input.ExclusiveStartKey = lastKey;
+        }while (lastKey);
+
+        return total;
+
+    }catch(error){
+        console.log(error.message);
+        return -1;
+    };
+};
+
+
+
+export {fetchStudentsCount};
