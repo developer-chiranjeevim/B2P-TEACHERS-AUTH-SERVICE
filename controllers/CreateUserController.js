@@ -1,7 +1,6 @@
 import { client } from "../db/dbConfig.js";
-import { PutCommand } from "@aws-sdk/lib-dynamodb";
+import { PutCommand} from "@aws-sdk/lib-dynamodb";
 import { fetchStudentsCount, CheckEmailAlreadyExists } from "../utils/FetchRecordsCount.js";
-
 
 const createUser = async(request, response) => {
 
@@ -38,6 +37,7 @@ const createStudentUser = async(request, response) => {
     }
 
     request.body.student_id =  `STU${docCount + 1}`;
+    request.body.isActive = true;
 
     const params = {
         TableName: process.env.B2P_TEACHERS_STUDENT_AUTH_TABLE,
@@ -53,6 +53,7 @@ const createStudentUser = async(request, response) => {
         response.status(500).json({message: error.message});
     };
 };
+
 
 
 
