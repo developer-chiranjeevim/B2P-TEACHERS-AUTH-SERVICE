@@ -68,7 +68,7 @@ const updateStudentActiveStatus = async(request, response) => {
         Key: {
             student_id: student_id
         },
-        UpdateExpression: "SET isActive = :isActive",
+        UpdateExpression: "SET datas.isActive = :isActive",  // Updated path
         ExpressionAttributeValues: {
             ":isActive": isActive
         },
@@ -84,12 +84,10 @@ const updateStudentActiveStatus = async(request, response) => {
         });
 
     } catch(error) {
+        console.error("DynamoDB Error:", error);
         response.status(500).json({ message: error.message });
     };
 };
-
-
-
 
 
 
