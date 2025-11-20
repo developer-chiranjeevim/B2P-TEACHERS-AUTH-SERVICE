@@ -39,14 +39,9 @@ const createStudentUser = async(request, response) => {
     request.body.student_id =  `STU${docCount + 1}`;
     request.body.isActive = true;
 
-    const record = {
-        student_id: request.body.student_id,
-        datas: request.body
-    }
-
     const params = {
         TableName: process.env.B2P_TEACHERS_STUDENT_AUTH_TABLE,
-        Item:record
+        Item:request.body
     };
 
     try{
