@@ -38,11 +38,16 @@ const CheckEmailAlreadyExists = async(email) => {
 
     try{
         const DBResponse = await client.send(new ScanCommand(params));
-        const exists = DBResponse.Items.map((item) => item.email == email);
+        const exists = DBResponse.Items.filter((item) => {
+            item.email == email;
+            return email
+        });
         
-        
-        
-        return exists;
+        if(exists.length == 0){
+            return false;
+        }else{
+            return true;
+        }
 
     } catch(error){
         console.log("Error checking email:", error);
