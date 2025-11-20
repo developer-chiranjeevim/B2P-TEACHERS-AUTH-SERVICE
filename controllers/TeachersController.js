@@ -13,7 +13,11 @@ const TeachersController = async(request, response) => {
         const DBResponse = await client.send(new ScanCommand(params));
 
         const teachers = DBResponse.Items.filter((item) => item.role["S"] != "admin");
-        const filteredResponse = teachers.map(({user_id, email}) => [user_id, email]);
+        const filteredResponse = teachers.map((item) => ({
+            user_id: item.user_id.S,
+            email: item.email.S,
+            user_name: item.user_name.S
+        }));
         response.status(200).json({teachers: filteredResponse});
 
 
@@ -21,6 +25,8 @@ const TeachersController = async(request, response) => {
         response.status(500).json({message: error.message});
     };
 };
+
+
 
 
 
