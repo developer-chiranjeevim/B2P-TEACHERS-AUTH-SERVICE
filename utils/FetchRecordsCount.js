@@ -1,6 +1,7 @@
 import { ScanCommand } from "@aws-sdk/client-dynamodb";
 import { client } from "../db/dbConfig.js";
 
+
 const fetchStudentsCount = async() => {
 
     try{
@@ -27,31 +28,28 @@ const fetchStudentsCount = async() => {
     };
 };
 
+
+
 const CheckEmailAlreadyExists = async(email) => {
     
     const params = {
         TableName: process.env.B2P_TEACHERS_STUDENT_AUTH_TABLE
     };
 
-    
-    
     try{
-    const DBResponse = await client.send(new ScanCommand(params));
-    const exists = DBResponse.Items.filter((item) => {
-        return item.email["S"] === email
+        const DBResponse = await client.send(new ScanCommand(params));
+        
+        const exists = DBResponse.Items.some(item => {
+            // Check nested datas.email
+            return item.datas?.email === email;
+        });
+        
+        return exists;
 
-    });
-    console.log(exists);
-    if(exists.length !== 0){
-        return true;
-    }else{
-        return false;
-    };
-
-    }catch(error){
-        console.log(error);
-        return -1;
-    };
+    } catch(error){
+        console.log("Error checking email:", error);
+        throw error;
+    }
 };
 
 
