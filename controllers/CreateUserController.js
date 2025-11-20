@@ -27,7 +27,7 @@ const createStudentUser = async(request, response) => {
 
     const docCount = await fetchStudentsCount();
     const emailExists = await CheckEmailAlreadyExists(request.body.email);
-
+    console.log(emailExists)
     if(docCount === -1){
         return response.status(500).json({message: "Cannout Able to fetch existing student count inorder to generate ID"});
     }

@@ -38,11 +38,9 @@ const CheckEmailAlreadyExists = async(email) => {
 
     try{
         const DBResponse = await client.send(new ScanCommand(params));
+        const exists = DBResponse.Items.map((item) => item.email == email);
         
-        const exists = DBResponse.Items.some(item => {
-            // Check nested datas.email
-            return item.datas?.email === email;
-        });
+        
         
         return exists;
 
