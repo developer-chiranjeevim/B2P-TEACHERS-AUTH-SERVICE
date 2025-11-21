@@ -50,6 +50,7 @@ const createStudentUser = async(request, response) => {
         response.status(200).json({message: "student user create successfully"});
 
     }catch(error){
+        console.log(error.message)
         response.status(500).json({message: error.message});
     };
 };

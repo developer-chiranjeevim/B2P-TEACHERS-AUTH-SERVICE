@@ -13,9 +13,9 @@ const FetchAllStudentsNames = async(request, response) => {
         const DBResponse = await client.send(new ScanCommand(params));
 
         const students = DBResponse.Items.map(item => ({
-            user_id: item.student_id.S,
-            user_name: item.datas.M.firstName.S,
-            email: item.datas.M.email.S
+            user_id: item.student_id["S"],
+            user_name: item.firstName["S"],
+            email: item.email["S"]
         }));
         
         response.status(200).json({students: students});
