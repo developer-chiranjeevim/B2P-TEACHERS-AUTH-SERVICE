@@ -66,7 +66,7 @@ const updateStudentActiveStatus = async(request, response) => {
         Key: {
             student_id: student_id
         },
-        UpdateExpression: "SET datas.isActive = :isActive",  // Updated path
+        UpdateExpression: "SET isActive = :isActive",  // Updated path
         ExpressionAttributeValues: {
             ":isActive": isActive
         },
