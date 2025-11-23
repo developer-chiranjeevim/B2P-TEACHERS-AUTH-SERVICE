@@ -17,7 +17,7 @@ const sendStudentOTP = async(email, password) => {
     try{
         sgMail.setApiKey(process.env.SEND_GRID_API_KEY);
         const msg = {
-            to: 'chiranjeevim2004@gmail.com',
+            to: email,
             from: 'noreply@b2pteachers.com', 
             subject: 'Welcome to B2P Teachers - Your Account Details',
             html: `
