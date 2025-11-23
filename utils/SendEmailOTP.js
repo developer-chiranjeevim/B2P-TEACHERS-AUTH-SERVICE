@@ -49,9 +49,11 @@ const sendStudentOTP = async(email, password) => {
         };
 
         await sgMail.send(msg);
+        console.log("sent")
         return true;
     }catch(error){
         return false;
+        console.log(error.message)
     };
 };
 

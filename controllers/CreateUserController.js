@@ -50,6 +50,7 @@ const createStudentUser = async(request, response) => {
         await client.send(new PutCommand(params));
 
         const otp_response = await sendStudentOTP(request.body.email, request.body.password);
+        
         if(otp_response){
             response.status(200).json({message: "student user create successfully, Login Credentials has beed send to your email"});
         }else{
