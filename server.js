@@ -7,6 +7,8 @@ import HomeRouter from "./routes/HomeRouter.js";
 import CreateUserRouter from "./routes/CreateUserRouter.js";
 import StudentRouter from "./routes/StudentRouter.js";
 import TeacherRouter from "./routes/TeachersRoute.js";
+import VoiceCall from "./routes/VoiceRoute.js";
+
 
 const app = express();
 
@@ -22,6 +24,7 @@ app.use('/apis', LoginUserRouter);
 app.use('/apis', CreateUserRouter);
 app.use('/apis', StudentRouter);
 app.use('/apis', TeacherRouter);
+app.use('/apis', VoiceCall);
 
 app.listen(PORT, (error) => {
     if(error){
