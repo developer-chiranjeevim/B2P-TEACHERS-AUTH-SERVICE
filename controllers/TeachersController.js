@@ -1,6 +1,6 @@
 import { ScanCommand } from "@aws-sdk/client-dynamodb";
 import { client } from "../db/dbConfig.js";
-
+import { sendTeacherOTP } from "../utils/SendEmailOTP.js";
 
 const TeachersController = async(request, response) => {
 
@@ -27,7 +27,24 @@ const TeachersController = async(request, response) => {
 };
 
 
+const sendTeacherApproval = async(request, response) => {
+    try{
+        const {email, password, name} = request.body;
+        const opt_response = sendTeacherOTP(email, password, name);
+        if(opt_response){
+            response.status(200).json({message: "OTP SENT"});
+        }else{
+            response.status(500).json({message: "OTP NOT SENT"});
+        };
+
+    }catch(error){
+        response.status(500).json({message: error.message});
+    };
+};
 
 
 
-export {TeachersController};
+
+
+
+export {TeachersController, sendTeacherApproval};

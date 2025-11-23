@@ -57,7 +57,62 @@ const sendStudentOTP = async(email, password) => {
     };
 };
 
+const sendTeacherOTP = async(email, password, name) => {
+    console.log("here")
+     try {
+        sgMail.setApiKey(process.env.SEND_GRID_API_KEY);
+        const msg = {
+            to: email,
+            from: 'noreply@b2pteachers.com', 
+            subject: 'Account Approved - Welcome to B2P Teachers!',
+            html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+                    <h2 style="color: #28a745;">🎉 Congratulations! Your Account Has Been Approved</h2>
+                    
+                    <p>Dear ${name},</p>
+                    
+                    <p>Great news! Your B2P Teachers account has been approved and is now active.</p>
+                    
+                    <div style="background-color: #d4edda; padding: 15px; border-left: 4px solid #28a745; margin: 20px 0;">
+                        <p style="margin: 0; color: #155724;">
+                            <strong>✅ Your account is ready to use!</strong>
+                        </p>
+                    </div>
+                    
+                    <p>Here are your login credentials:</p>
+                    
+                    <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                        <p style="margin: 10px 0;">Email: <strong>${email}</strong></p>
+                        <p style="margin: 10px 0;">Password: <strong>${password}</strong></p>
+                    </div>
+                    
+                    <p style="color: #d9534f; font-weight: bold;">⚠️ Important Security Notice:</p>
+                    <ul style="line-height: 1.8; color: #666;">
+                        <li>Please do not share your login credentials with anyone</li>
+                        <li>We strongly recommend changing your password after your first login</li>
+                        <li>Keep this information secure and confidential</li>
+                    </ul>
+                    
+                    <p>If you have any questions or need assistance, feel free to contact our support team.</p>
+                    
+                    <p>We're excited to have you on board!</p>
+                    
+                    <p>Best regards,<br>
+                    <strong>B2P Teachers Team</strong></p>
+                </div>
+            `,
+        };
 
-export {sendStudentOTP};
+        await sgMail.send(msg);
+        console.log("Teacher approval email sent to:", email);
+        return true;
+    } catch(error) {
+        console.log("Error sending approval email:", error.message);
+        return false;
+    }
+}
+
+
+export {sendStudentOTP, sendTeacherOTP};
 
 

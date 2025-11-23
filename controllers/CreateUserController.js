@@ -67,4 +67,5 @@ const createStudentUser = async(request, response) => {
 
 
 
+
 export {createUser, createStudentUser};
