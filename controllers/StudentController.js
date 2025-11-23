@@ -1,48 +1,55 @@
-import { ScanCommand } from "@aws-sdk/client-dynamodb";
+
 import { client } from "../db/dbConfig.js";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
-import { UpdateCommand } from "@aws-sdk/lib-dynamodb";
+import { ScanCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 
-const FetchAllStudentsNames = async(request, response) => {
 
-    const params = {
-        TableName: process.env.B2P_TEACHERS_STUDENT_AUTH_TABLE
-    }
-
-    try{
-        const DBResponse = await client.send(new ScanCommand(params));
-
-        const students = DBResponse.Items.map(item => ({
-            user_id: item.student_id["S"],
-            user_name: item.firstName["S"],
-            email: item.email["S"]
-        }));
-        
-        response.status(200).json({students: students});
-
-    }catch(error){
-        response.status(500).json({message: error.message});
-    };
+const FetchAllStudentsNames = async(request, response) => { 
+  const params = { 
+    TableName: process.env.B2P_TEACHERS_STUDENT_AUTH_TABLE 
+  };
+  
+  try {
+    // client.send(new ScanCommand(...)) now returns unmarshalled items
+    const DBResponse = await client.send(new ScanCommand(params)); 
+    
+    // NO unmarshall needed here!
+    const students = DBResponse.Items.map(item => ({ 
+      user_id: item.student_id, // Accessing fields directly
+      user_name: item.firstName, 
+      email: item.email 
+    })); 
+    
+    response.status(200).json({students: students}); 
+  } catch(error) { 
+    console.error("Error fetching students:", error);
+    response.status(500).json({message: error.message}); 
+  }
 };
 
 
 const FetchAllStudentDetails = async(request, response) => {
     
-    const params = {
-        TableName: process.env.B2P_TEACHERS_STUDENT_AUTH_TABLE
+  const params = {
+    TableName: process.env.B2P_TEACHERS_STUDENT_AUTH_TABLE
+  };
+
+  try {
+    const DBResponse = await client.send(new ScanCommand(params));
+
+    if (!DBResponse.Items) {
+      return response.status(200).json({students: []});
     }
 
-    try{
-        const DBResponse = await client.send(new ScanCommand(params));
+    // FIX: Items are already unmarshalled, no need to call unmarshall()
+    const students = DBResponse.Items;
 
-       
-        const students = DBResponse.Items.map(item => unmarshall(item));
+    response.status(200).json({students});
 
-        response.status(200).json({students});
-
-    }catch(error){
-        response.status(500).json({message: error.message});
-    };
+  } catch(error) {
+    console.error("Error fetching student details:", error);
+    response.status(500).json({message: error.message});
+  }
 };
 
 const updateStudentActiveStatus = async(request, response) => {

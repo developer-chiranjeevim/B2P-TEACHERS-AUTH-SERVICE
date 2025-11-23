@@ -1,6 +1,7 @@
 import { client } from "../db/dbConfig.js";
 import { PutCommand} from "@aws-sdk/lib-dynamodb";
 import { fetchStudentsCount, CheckEmailAlreadyExists } from "../utils/FetchRecordsCount.js";
+import { sendStudentOTP } from "../utils/SendEmailOTP.js";
 
 const createUser = async(request, response) => {
 
@@ -47,8 +48,14 @@ const createStudentUser = async(request, response) => {
     try{
 
         await client.send(new PutCommand(params));
-        response.status(200).json({message: "student user create successfully"});
 
+        const otp_response = await sendStudentOTP(request.body.email, request.body.password);
+        if(otp_response){
+            response.status(200).json({message: "student user create successfully, Login Credentials has beed send to your email"});
+        }else{
+            response.status(200).json({message: "student user create successfully, Error while sending Login Credentials Please contact admin"});
+        };
+        
     }catch(error){
         console.log(error.message)
         response.status(500).json({message: error.message});
