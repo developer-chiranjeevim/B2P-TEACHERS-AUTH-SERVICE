@@ -19,8 +19,6 @@ const client = twilio(
 );
 
 
-
-
 const sendVoiceMessage = async (toPhoneNumber, message) => {
     try {
         const call = await client.calls.create({

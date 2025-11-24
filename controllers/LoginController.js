@@ -32,5 +32,43 @@ const LoginController = async(request, response) => {
     };
 };
 
+const StudentLoginController = async(request, response) => {
 
-export default LoginController;
+    try{
+        const email = request.body.email;
+        const password = request.body.password;
+
+        const params = {
+            TableName: process.env.B2P_STUDENT_AUTH_DYNAMO_TABLE,
+        };
+
+        const command = new ScanCommand(params);
+        const db_response = await client.send(command);
+
+        const user = db_response.Items.find(
+            item => item.email === email && item.password === password
+        );
+        
+        if(user){
+            if(!user.isActive){
+                return response.status(409).json({message: "Access Had Been Blocked Contact Admin"});
+            }
+
+            const token_body = {
+                student_id: user.student_id,
+            }
+            const token = await generateToken(token_body);
+            response.status(200).json({token: token});
+        }else{
+            response.status(404).json({message: "user not found"});
+        };
+
+
+    }catch(error){
+        response.status(500).json({message: error.message});
+    };
+};
+
+
+
+export {LoginController, StudentLoginController};
