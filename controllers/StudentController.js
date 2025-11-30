@@ -14,11 +14,13 @@ const FetchAllStudentsNames = async(request, response) => {
     const DBResponse = await client.send(new ScanCommand(params)); 
     
     // NO unmarshall needed here!
-    const students = DBResponse.Items.map(item => ({ 
-      user_id: item.student_id, // Accessing fields directly
-      user_name: item.firstName, 
-      email: item.email 
-    })); 
+    const students = DBResponse.Items
+    .filter(item => item.availStatus) // Only include items where availStatus is true
+    .map(item => ({
+      user_id: item.student_id,
+      user_name: item.firstName,
+      email: item.email
+    }));
     
     response.status(200).json({students: students}); 
   } catch(error) { 
