@@ -97,5 +97,38 @@ const updateStudentActiveStatus = async(request, response) => {
 };
 
 
+const updateStudentAvailStatus = async(request, response) => {
 
-export {FetchAllStudentsNames, FetchAllStudentDetails, updateStudentActiveStatus};
+  const student_id = request.body.student_id;
+  if (!student_id) {
+      return response.status(400).json({ message: "student_id is required" });
+  };
+
+  const params = {
+    TableName: process.env.B2P_TEACHERS_STUDENT_AUTH_TABLE,
+    Key: { student_id: student_id },
+    UpdateExpression: "SET availStatus = :availStatus",
+    ExpressionAttributeValues: {
+      ":availStatus": true  // Add the colon prefix here
+    },
+    ReturnValues: "ALL_NEW"
+  };
+
+  try{
+
+    const DBResponse = await client.send(new UpdateCommand(params));
+
+    response.status(200).json({
+      message: "Student active status updated successfully",
+      student: DBResponse.Attributes
+    });
+
+
+  }catch(error){
+    response.status(500).json({message: error.message});
+  };
+};
+
+
+
+export {FetchAllStudentsNames, FetchAllStudentDetails, updateStudentActiveStatus, updateStudentAvailStatus};
