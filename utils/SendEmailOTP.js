@@ -34,6 +34,11 @@ const sendStudentOTP = async(email, password) => {
                         <p style="margin: 10px 0;">Email: <strong>${email}</strong></p>
                         <p style="margin: 10px 0;">Password: <strong>${password}</strong></p>
                     </div>
+
+                    <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                        <p style="margin: 10px 0;">Student Dashboard: <strong>student.b2pteachers.com</strong></p>
+                        <p style="margin: 10px 0;">Parents Dashboard: <strong>teachers.b2pteachers.com</strong></p>
+                    </div>
                     
                     <p style="color: #d9534f; font-weight: bold;">⚠️ Important Security Notice:</p>
                     <p>Please do not share your login credentials with anyone else. Keep this information secure and confidential.</p>
