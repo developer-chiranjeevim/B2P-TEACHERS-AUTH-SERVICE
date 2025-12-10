@@ -12,15 +12,16 @@ const FetchAllStudentsNames = async(request, response) => {
   try {
     // client.send(new ScanCommand(...)) now returns unmarshalled items
     const DBResponse = await client.send(new ScanCommand(params)); 
-    
+    console.log(DBResponse.Items)
     // NO unmarshall needed here!
     const students = DBResponse.Items
     .filter(item => item.availStatus) // Only include items where availStatus is true
     .map(item => ({
       user_id: item.student_id,
       user_name: item.firstName,
-      email: item.email
-    }));
+      email: item.email,
+      course: item.course
+    }));  
     
     response.status(200).json({students: students}); 
   } catch(error) { 

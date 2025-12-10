@@ -20,9 +20,11 @@ const VoiceCallController = async(request, response) => {
     const students = DBResponse.Items.map(item => `+91${item.phone}`); 
     students.map((student) => {
         sendVoiceCall(student, message);
+        // console.log(student)
     });
+    // sendVoiceCall("+919345893138", message);
     
-    response.status(200).json({students: students}); 
+    response.status(200).json({message: "call send"}); 
   } catch(error) { 
     console.error("Error fetching students:", error);
     response.status(500).json({message: error.message}); 
