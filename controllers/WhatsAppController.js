@@ -10,11 +10,11 @@ const sendWhatsAppMessage = async(request, response) => {
     if(!customerNumber && !params){
         return response.status(400).response.json({message: "Invalid Body"});
     }
-
+    console.log("here");
     try{
 
         const message = await client.messages.create({
-            from: `whatsapp:+15557803137`,
+            from: `whatsapp:+15557250913`,
             to: `whatsapp:+91${customerNumber}`,
             contentSid: 'HX3337338fbbf9272255931f4a20f0d1dd', 
             contentVariables: JSON.stringify({
