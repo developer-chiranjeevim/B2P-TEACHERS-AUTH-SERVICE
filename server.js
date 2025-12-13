@@ -9,6 +9,8 @@ import StudentRouter from "./routes/StudentRouter.js";
 import TeacherRouter from "./routes/TeachersRoute.js";
 import VoiceCall from "./routes/VoiceRoute.js";
 import Whatsapp from "./routes/WhatsAppRouter.js";
+import TextMessage from "./routes/TextMessageRouter.js"
+
 
 const app = express();
 
@@ -26,6 +28,8 @@ app.use('/apis', StudentRouter);
 app.use('/apis', TeacherRouter);
 app.use('/apis', VoiceCall);
 app.use('/apis', Whatsapp);
+app.use('/apis', TextMessage);
+
 
 app.listen(PORT, (error) => {
     if(error){

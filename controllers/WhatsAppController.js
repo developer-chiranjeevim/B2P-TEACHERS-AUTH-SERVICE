@@ -16,7 +16,7 @@ const sendWhatsAppMessage = async(request, response) => {
         const message = await client.messages.create({
             from: `whatsapp:+15557250913`,
             to: `whatsapp:+91${customerNumber}`,
-            contentSid: 'HX3337338fbbf9272255931f4a20f0d1dd', 
+            contentSid: 'HX85c1f6496b30a3938539b256780b1159', 
             contentVariables: JSON.stringify({
                 "1": params.name,
                 "2": params.time,
