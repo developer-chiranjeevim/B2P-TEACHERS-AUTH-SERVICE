@@ -1,6 +1,7 @@
-import { ScanCommand } from "@aws-sdk/client-dynamodb";
+import { ScanCommand, DeleteItemCommand} from "@aws-sdk/client-dynamodb";
 import { client } from "../db/dbConfig.js";
 import { sendTeacherOTP } from "../utils/SendEmailOTP.js";
+
 
 const TeachersController = async(request, response) => {
 
@@ -43,8 +44,22 @@ const sendTeacherApproval = async(request, response) => {
 };
 
 
+const deleteTeacher = async(request, response) => {
+    const { user_id } = request.body;
+    try {
+        const params = {
+            TableName: process.env.B2P_TEACHERS_AUTH_DYNAMO_TABLE,
+            Key: { 
+                user_id: { S: user_id } // You MUST include the { S: } here
+            }
+        };
+
+        await client.send(new DeleteItemCommand(params));
+        response.status(200).json({message: "Teacher deleted successfully"});
+    } catch(error) {
+        response.status(500).json({message: error.message});
+    }
+};
 
 
-
-
-export {TeachersController, sendTeacherApproval};
+export {TeachersController, sendTeacherApproval, deleteTeacher};
