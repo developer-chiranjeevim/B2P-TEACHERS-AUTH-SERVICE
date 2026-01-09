@@ -212,7 +212,7 @@ const sendTeacherOTP = async(email, password, name) => {
                                             <table role="presentation" style="width: 100%; margin-bottom: 30px;">
                                                 <tr>
                                                     <td align="center">
-                                                        <a href="https://teacher.b2pteachers.com" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                                                        <a href="https://teachers.b2pteachers.com" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
                                                             Access Teacher Dashboard
                                                         </a>
                                                     </td>
