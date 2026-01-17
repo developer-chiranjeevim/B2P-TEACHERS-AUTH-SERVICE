@@ -1,77 +1,82 @@
-import twillo from "twilio";
+import twilio from "twilio";
+import dotenv from "dotenv";
 
-const twilioClient = twillo(
-    process.env.VOICE_SID ,
-    process.env.VOICE_AUTH_TOKEN
+// Initialize dotenv to read the .env file
+dotenv.config();
+
+// Initialize Twilio with the corrected environment variable names
+const twilioClient = twilio(
+    process.env.TWILIO_ACCOUNT_SID, 
+    process.env.TWILIO_AUTH_TOKEN
 );
 
-const sendTextMessage = async(request, response) => {
-    try{
-        // Extract data from request body
+
+const sendTextMessage = async (request, response) => {
+    console.log(process.env.TWILIO_ACCOUNT_SID,process.env.TWILIO_AUTH_TOKEN);
+    try {
+        // 1. Extract data from request body
         const { name, time, meetingLink, phoneNumber } = request.body;
-        
-        // Validate required fields
+
+        // 2. Validate required fields
         if (!name || !time || !meetingLink || !phoneNumber) {
             return response.status(400).json({
+                success: false,
                 message: 'Missing required fields',
                 required: ['name', 'time', 'meetingLink', 'phoneNumber']
             });
         }
-        
-        // Format phone number - add +91 if not present
-        let formattedPhone = phoneNumber.toString().trim();
-        
-        // Remove any spaces, dashes, or parentheses
-        formattedPhone = formattedPhone.replace(/[\s\-\(\)]/g, '');
-        
-        // If phone number doesn't start with +, add +91
+
+        // 3. Format phone number for India (+91)
+        let formattedPhone = phoneNumber.toString().trim().replace(/[\s\-\(\)]/g, '');
+
         if (!formattedPhone.startsWith('+')) {
-            // If it starts with 91, just add +
             if (formattedPhone.startsWith('91')) {
                 formattedPhone = '+' + formattedPhone;
             } else {
-                // Otherwise add +91
                 formattedPhone = '+91' + formattedPhone;
             }
         }
-        
-        // Validate the formatted phone number (should be +91 followed by 10 digits)
+
+        // 4. Validate Indian phone number format
         const phoneRegex = /^\+91[6-9]\d{9}$/;
         if (!phoneRegex.test(formattedPhone)) {
             return response.status(400).json({
-                message: 'Invalid Indian phone number. Must be a valid 10-digit mobile number'
+                success: false,
+                message: 'Invalid Indian phone number. Must be 10 digits.'
             });
         }
-        
-        // Compose the message
-        const message = `Hello ${name},\n\n From B2P Teachers \n\n Your meeting is scheduled for ${time}.\n\nJoin here: ${meetingLink}\n\nContact: ${phoneNumber}`;
-        
-        // Send SMS via Twilio
-        const twilioMessage = await twilioClient.messages.create({
-            body: message,
-            from: "+19789694985", // Your Twilio phone number
+
+        // 5. Compose the message
+        const messageContent = `Hello ${name},\n\nFrom B2P Teachers\n\nYour meeting is scheduled for ${time}.\n\nJoin here: ${meetingLink}`;
+
+        // 6. Send SMS via Twilio
+        const twilioResponse = await twilioClient.messages.create({
+            body: messageContent,
+            from: process.env.TWILIO_PHONE_NUMBER,
             to: formattedPhone
         });
-        
-        // Return success response
-        response.status(200).json({
+
+        // 7. Success Response
+        return response.status(200).json({
             success: true,
             message: 'Text message sent successfully',
             data: {
-                name,
-                time,
-                meetingLink,
-                phoneNumber: formattedPhone,
-                messageContent: message,
-                messageSid: twilioMessage.sid,
-                status: twilioMessage.status
+                messageSid: twilioResponse.sid,
+                status: twilioResponse.status,
+                recipient: formattedPhone
             }
         });
+
+    } catch (error) {
+        console.error("Twilio Error Details:", error);
         
-    }catch(error){
-        response.status(500).json({message: error.message});
-    };
+        // Return Twilio specific error if available, else generic 500
+        return response.status(error.status || 500).json({
+            success: false,
+            message: error.message,
+            code: error.code // Useful for debugging (e.g., 21608 for unverified numbers)
+        });
+    }
 };
 
-
-export {sendTextMessage}
+export { sendTextMessage };
